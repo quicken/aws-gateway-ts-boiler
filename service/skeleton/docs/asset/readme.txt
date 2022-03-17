@@ -1,0 +1,1 @@
+Place images referenced by documentation markdown files into this folder.

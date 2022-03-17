@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf service/*/node_modules"
+  },
+  "workspaces": [
+    "service/*"
+  ],
+  "devDependencies": {
+    "typedoc": "^0.22.13",
+    "typedoc-plugin-markdown": "^3.11.14"
+  }
+}

@@ -1,0 +1,63 @@
+# The Serverless Framework translates all syntax in serverless.yml to a single AWS CloudFormation template
+# Reference: https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml
+#
+service: ${self:custom.servicePath}-0-service
+useDotenv: true
+
+plugins:
+    - serverless-plugin-monorepo # Make it possible to use Serverless in a Javascript mono repo with hoisted dependencies
+    - serverless-offline # Allow ability to emulate AWS Lambda and API Gateway locally for development
+
+package:
+    excludeDevDependencies: true
+    patterns:
+        - "!./**" # initialy exclude every file from the package
+        - "./dist/**" # only include built files
+        - "node_modules/**" # include all dependencies - need to revise this
+
+provider:
+    name: aws
+    apiName: ${self:custom.resourcePath}-service
+    stackName: ${self:custom.resourcePath}-stack # CloudFormation stack name
+    runtime: nodejs14.x
+    stage: ${opt:stage, 'development'}
+    lambdaHashingVersion: 20201221
+    deploymentBucket:
+        name: my-source-code-bucket # Point to artifacts bucket - This resource is created outside of serverless
+        maxPreviousDeploymentArtifacts: 30 # On every deployment the framework prunes the bucket to remove artifacts older than this limit.
+    deploymentPrefix: serverless # The S3 prefix under which deployed artifacts should be stored.
+    region: ap-southeast-2
+    environment:
+        NODE_OPTIONS: "--enable-source-maps"
+    #iam:
+    #    role: arn:aws:iam::${self:custom.${self:provider.stage}.accountID}:role/my-role-for-running-the-lambda
+    apiGateway:
+        binaryMediaTypes:
+            - "*/*"
+
+functions:
+    demoHandler:
+        name: ${self:custom.servicePath}-demo-api
+        description: This lamda is a reference implementation for an AWS API Gateway micro-service.
+        handler: dist/lambda/DemoLambda.handler
+        events:
+            - http:
+                  path: example
+                  method: post
+            - http:
+                  path: example
+                  method: get
+
+custom:
+    development:
+        accountID: 000000000000
+    testing:
+        accountID: 000000000000
+    staging:
+        accountID: 000000000000
+    production:
+        accountID: 000000000000
+    servicePath: aws-api-gateway-demo-service
+    resourcePath: aws-api-gateway-demo
+    serverless-offline:
+        noPrependStageInUrl: true

@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-node",
+      "request": "attach",
+      "name": "node attach",
+      "port": 9229,
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/service/${input:pickWorkspace}/dist/**/*.js"
+      ],
+      "runtimeSourcemapPausePatterns": ["${workspaceFolder}/.webpack/**/*.js"]
+    },
+    {
+      "name": "test open file",
+      "type": "node",
+      "request": "launch",
+      "env": {
+        "CI": "true"
+      },
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        "${fileBasenameNoExtension}",
+        "--config",
+        "${workspaceFolder}/service/${input:pickWorkspace}/jest.config.ts"
+      ],
+      "cwd": "${workspaceFolder}/service/${input:pickWorkspace}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "test all",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "cwd": "${workspaceFolder}/service/${input:pickWorkspace}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "pickWorkspace",
+      "description": "Select a yarn workspace",
+      "type": "pickString",
+      "options": [
+        "skeleton",
+      ],
+      "default": "skeleton"
+    }
+  ]
+}
