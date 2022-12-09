@@ -37,8 +37,8 @@
   },
   "scripts": {
     "test": "AWS_PROFILE=default jest",
-    "start": "AWS_PROFILE=default node $DEMO_HOME/node_modules/serverless/bin/serverless offline -s dev",
-    "debug": "AWS_PROFILE=default node --inspect $DEMO_HOME/node_modules/serverless/bin/serverless offline -s dev",
+    "start": "tsc && AWS_PROFILE=default node $AX_HOME/aws-gateway-ts-boiler/node_modules/serverless/bin/serverless offline -s dev",
+    "debug": "tsc && AWS_PROFILE=default node --inspect $AX_HOME/node_modules/serverless/bin/serverless offline -s dev",
     "docs": "typedoc",
     "build": "tsc && sls package",
     "deploy": "tsc && sls package --stage testing && AWS_SDK_LOAD_CONFIG=1 sls deploy --stage testing --verbose --aws-profile default",
